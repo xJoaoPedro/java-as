@@ -1,0 +1,1 @@
+quando encerrar o ciclo, deve voltar para o menu correto. (while trues)

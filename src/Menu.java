@@ -8,9 +8,30 @@ public class Menu {
 
     ArrayList<Imovel> imoveis = new ArrayList<>();
     ArrayList<Jogador> jogadores = new ArrayList<>();
+    double saldoInicial = 0;
+    double salario = 0;
+    int numeroRodadas = 0;
+    int rodadaAtual = 0;
+
+    public Menu() {
+        this.jogadores.add(new Jogador("Joao"));
+        this.jogadores.add(new Jogador("Vini"));
+
+        this.imoveis.add(new Imovel("imovel", "Casa do Bosque", 200000.00, 1100.00));
+        this.imoveis.add(new Imovel("imovel", "Apartamento Central", 350000.00, 1800.00));
+        this.imoveis.add(new Imovel("imovel", "Vila das Flores", 400000.00, 2200.00));
+        this.imoveis.add(new Imovel("imovel", "Pousada da Praia", 500000.00, 2700.00));
+        this.imoveis.add(new Imovel("imovel", "Mansão da Colina", 600000.00, 3300.00));
+        this.imoveis.add(new Imovel("imovel", "Residência do Lago", 450000.00, 2500.00));
+        this.imoveis.add(new Imovel("imovel", "Cobertura Diamante", 700000.00, 3700.00));
+        this.imoveis.add(new Imovel("imovel", "Edifício Horizonte", 550000.00, 2900.00));
+        this.imoveis.add(new Imovel("imovel", "Chácara do Sol", 300000.00, 1600.00));
+        this.imoveis.add(new Imovel("imovel", "Fazenda Boa Vista", 250000.00, 1300.00));
+    }
 
     public void iniciar() {
         while (true) {
+            System.out.println("\n");
             System.out.println("=========================================");
             System.out.println("=== SIMULADOR DE JOGO DE TABULEIRO    ===");
             System.out.println("=========================================");
@@ -41,12 +62,13 @@ public class Menu {
                     gerenciarImoveis();
                     break;
                 case 3:
-                    // definirConfigs();
+                    definirConfigs();
                     break;
                 case 4:
-                    // TODO COMPLETAR ESSA LOGICA
-                    // if (this.jogadores.size() < 2 || // continuar a logica aqui)
-
+                    if (validarJogo()) {
+                        // jogar();
+                    }
+                    break;
                 case 0:
                     System.out.println("Fechando o programa...");
                     System.exit(0);
@@ -159,9 +181,58 @@ public class Menu {
                     System.out.println("Imóvel removido com sucesso!");
                     break;
                 }
-                case 4:
+                case 4: {
                     continuar = false;
                     break;
+                }
+            }
+        }
+    }
+
+    public void definirConfigs() {
+        boolean continuar = true;
+
+        while (continuar) {
+            System.out.println("\n\n");
+            System.out.println("--- Configurações da Partida ---");
+            System.out.println("1. Definir saldo inicial (Atual: R$ " + this.saldoInicial + ")");
+            System.out.println("2. Definir salário por volta (Atual: R$ " + this.salario + ")");
+            System.out.println("3. Definir nº máximo de rodadas (Atual: " + this.numeroRodadas + ")");
+            System.out.println("4. Voltar ao Menu Principal");
+            System.out.print("\n>> Escolha uma opção: ");
+
+            int opcao = this.scanner.nextInt();
+            scanner.nextLine();
+
+            while (opcao < 1 || opcao > 4) {
+                System.out.println("Opção inválida, escolha entre 1-4");
+                opcao = this.scanner.nextInt();
+                scanner.nextLine();
+            }
+
+            switch (opcao) {
+                case 1: {
+                    System.out.print("\n>> Digite o valor do saldo inicial dos jogadores: ");
+                    this.saldoInicial = scanner.nextDouble();
+                    System.out.println("Saldo inicial inserido!");
+                    break;
+                }
+                case 2: {
+                    System.out.print("\n>> Digite o valor do salário recebido por volta: ");
+                    this.salario = scanner.nextDouble();
+                    System.out.println("Salário dos jogadores inserido!");
+                    break;
+                }
+                case 3: {
+                    System.out.print("\n>> Digite o numero máximo de rodadas: ");
+                    this.numeroRodadas = scanner.nextInt();
+                    System.out.println("Numero de rodadas inserido!");
+                    break;
+                }
+                case 4: {
+                    continuar = false;
+                    break;
+                }
             }
         }
     }
@@ -180,5 +251,40 @@ public class Menu {
             Imovel imovel = this.imoveis.get(i);
             System.out.println(i + ". " + imovel.getNome() + " - Preço: R$ " + imovel.getPrecoCompra() + " - Aluguel: R$ " + imovel.getPrecoAluguel());
         }
+    }
+
+    public boolean validarJogo() {
+        if (this.jogadores.size() < 2) {
+            System.out.println("ERRO: O jogo não pode ser iniciado.");
+            System.out.println("Motivo: Mínimo de 2 jogadores não alcançado (apenas " + this.jogadores.size() + " jogador).");
+            return false;
+        }
+
+        if (this.imoveis.size() < 10) {
+            System.out.println("ERRO: O jogo não pode ser iniciado.");
+            System.out.println("Motivo: Mínimo de 10 imóveis não alcançado (apenas " + this.imoveis.size() + " cadastrados).");
+            return false;
+        }
+
+        if (this.saldoInicial == 0) {
+            System.out.println("ERRO: O jogo não pode ser iniciado.");
+            System.out.println("Motivo: O saldo inicial não foi definido.");
+            return false;
+        }
+
+        if (this.salario == 0) {
+            System.out.println("ERRO: O jogo não pode ser iniciado.");
+            System.out.println("Motivo: O salário não foi deifinido.");
+            return false;
+        }
+
+        if (this.numeroRodadas == 0) {
+            System.out.println("ERRO: O jogo não pode ser iniciado.");
+            System.out.println("Motivo: O número de rodadas não foi deifinido.");
+            return false;
+        }
+
+        System.out.println("Tudo pronto! iniciando jogo...");
+        return true;
     }
 }

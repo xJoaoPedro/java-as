@@ -1,15 +1,16 @@
 package Tabuleiro.TiposDeCasa;
 
+import Jogo.Jogador;
 import Tabuleiro.Casa;
 
 public class Imposto extends Casa {
 
-    public Imposto(String tipo) {
-        this.tipo = tipo;
+    public Imposto() {
+        super("imposto", "Casa de imposto", false);
     }
 
     @Override
-    public void executarAcao() {
+    public void executarAcao(Jogador jogadorAtual) {
         // Ao parar nesta casa, o jogador deve pagar ao "banco" uma taxa de 5% sobre seu patrimônio total (saldo + valor dos imóveis).
     }
 }

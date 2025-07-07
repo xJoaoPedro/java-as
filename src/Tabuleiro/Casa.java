@@ -1,9 +1,29 @@
 package Tabuleiro;
 
+import Jogo.Jogador;
+
 public class Casa {
     protected String tipo;
-    protected Casa proximo = null;
-    protected boolean isInicio = false;
+    protected String nome;
+    protected Casa proximo;
+    protected boolean isInicio;
 
-    public void executarAcao() {};
+    public Casa(String tipo, String nome, boolean isInicio) {
+        this.tipo = tipo;
+        this.nome = nome;
+        this.proximo = null;
+        this.isInicio = isInicio;
+    }
+
+    public void executarAcao(Jogador jogadorAtual) {};
+
+    public void verificarInicio(Jogador jogadorAtual) {};
+
+    public String getNome() {
+        return nome;
+    }
+
+    public Casa getProximo() {
+        return proximo;
+    }
 }

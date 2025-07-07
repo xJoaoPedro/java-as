@@ -1,32 +1,42 @@
+package Jogo;
+
+import Tabuleiro.Tabuleiro;
 import Tabuleiro.TiposDeCasa.Imovel;
 
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.Scanner;
 
 public class Menu {
     Scanner scanner = new Scanner(System.in);
+    Random random = new Random();
 
+    Tabuleiro tabuleiro = new Tabuleiro();
     ArrayList<Imovel> imoveis = new ArrayList<>();
     ArrayList<Jogador> jogadores = new ArrayList<>();
-    double saldoInicial = 0;
-    double salario = 0;
-    int numeroRodadas = 0;
+    double saldoInicial;
+    double salario;
+    int numeroRodadas;
     int rodadaAtual = 0;
 
     public Menu() {
         this.jogadores.add(new Jogador("Joao"));
         this.jogadores.add(new Jogador("Vini"));
 
-        this.imoveis.add(new Imovel("imovel", "Casa do Bosque", 200000.00, 1100.00));
-        this.imoveis.add(new Imovel("imovel", "Apartamento Central", 350000.00, 1800.00));
-        this.imoveis.add(new Imovel("imovel", "Vila das Flores", 400000.00, 2200.00));
-        this.imoveis.add(new Imovel("imovel", "Pousada da Praia", 500000.00, 2700.00));
-        this.imoveis.add(new Imovel("imovel", "Mansão da Colina", 600000.00, 3300.00));
-        this.imoveis.add(new Imovel("imovel", "Residência do Lago", 450000.00, 2500.00));
-        this.imoveis.add(new Imovel("imovel", "Cobertura Diamante", 700000.00, 3700.00));
-        this.imoveis.add(new Imovel("imovel", "Edifício Horizonte", 550000.00, 2900.00));
-        this.imoveis.add(new Imovel("imovel", "Chácara do Sol", 300000.00, 1600.00));
-        this.imoveis.add(new Imovel("imovel", "Fazenda Boa Vista", 250000.00, 1300.00));
+        this.imoveis.add(new Imovel( "Casa do Bosque", 200000.00, 1100.00));
+        this.imoveis.add(new Imovel("Apartamento Central", 350000.00, 1800.00));
+        this.imoveis.add(new Imovel("Vila das Flores", 400000.00, 2200.00));
+        this.imoveis.add(new Imovel("Pousada da Praia", 500000.00, 2700.00));
+        this.imoveis.add(new Imovel("Mansão da Colina", 600000.00, 3300.00));
+        this.imoveis.add(new Imovel("Residência do Lago", 450000.00, 2500.00));
+        this.imoveis.add(new Imovel("Cobertura Diamante", 700000.00, 3700.00));
+        this.imoveis.add(new Imovel("Edifício Horizonte", 550000.00, 2900.00));
+        this.imoveis.add(new Imovel("Chácara do Sol", 300000.00, 1600.00));
+        this.imoveis.add(new Imovel("Fazenda Boa Vista", 250000.00, 1300.00));
+
+        this.saldoInicial = 1000000.00;
+        this.salario = 4500.00;
+        this.numeroRodadas = 10;
     }
 
     public void iniciar() {
@@ -55,23 +65,28 @@ public class Menu {
             }
 
             switch (opcao) {
-                case 1:
+                case 1: {
                     gerenciarJogadores();
                     break;
-                case 2:
+                }
+                case 2: {
                     gerenciarImoveis();
                     break;
-                case 3:
+                }
+                case 3: {
                     definirConfigs();
                     break;
-                case 4:
+                }
+                case 4: {
                     if (validarJogo()) {
-                        // jogar();
+                        jogar();
                     }
                     break;
-                case 0:
+                }
+                case 0: {
                     System.out.println("Fechando o programa...");
                     System.exit(0);
+                }
             }
         }
     }
@@ -81,12 +96,12 @@ public class Menu {
 
         while (continuar) {
             System.out.println("\n\n");
-            System.out.println("--- Menu de Jogadores ---");
+            System.out.println("--- Jogo.Menu de Jogadores ---");
             System.out.println("(Atualmente: " + this.jogadores.size() + "/6 jogadores cadastrados)");
-            System.out.println("1. Cadastrar Novo Jogador");
+            System.out.println("1. Cadastrar Novo Jogo.Jogador");
             System.out.println("2. Listar Jogadores Cadastrados");
-            System.out.println("3. Remover Jogador");
-            System.out.println("4. Voltar ao Menu Principal");
+            System.out.println("3. Remover Jogo.Jogador");
+            System.out.println("4. Voltar ao Jogo.Menu Principal");
             System.out.print("\n>> Escolha uma opção: ");
 
             int opcao = scanner.nextInt();
@@ -103,7 +118,7 @@ public class Menu {
                     System.out.print("\n>> Digite o nome do novo jogador: ");
                     String nome = scanner.next();
                     this.jogadores.add(new Jogador(nome));
-                    System.out.println("Jogador criado com sucesso!");
+                    System.out.println("Jogo.Jogador criado com sucesso!");
                     break;
                 }
                 case 2: {
@@ -119,7 +134,7 @@ public class Menu {
                         opcao2 = this.scanner.nextInt();
                     }
                     this.jogadores.remove(opcao2);
-                    System.out.println("Jogador removido com sucesso!");
+                    System.out.println("Jogo.Jogador removido com sucesso!");
                     break;
                 }
                 case 4: {
@@ -135,12 +150,12 @@ public class Menu {
 
         while (continuar) {
             System.out.println("\n\n");
-            System.out.println("--- Menu de Imóveis ---");
-            System.out.println("(Atualmente: " + this.imoveis.size() + "/40 imóveis cadastrados)");
+            System.out.println("--- Jogo.Menu de Imóveis ---");
+            System.out.println("(Atualmente: " + this.imoveis.size() + "/30 imóveis cadastrados)");
             System.out.println("1. Cadastrar Novo Imóvel");
             System.out.println("2. Listar Imóveis Cadastrados");
             System.out.println("3. Remover Imóvel");
-            System.out.println("4. Voltar ao Menu Principal");
+            System.out.println("4. Voltar ao Jogo.Menu Principal");
             System.out.print("\n>> Escolha uma opção: ");
 
             int opcao = this.scanner.nextInt();
@@ -161,7 +176,7 @@ public class Menu {
                     System.out.print("\n>> Digite o preço de aluguel de " + nome + ": ");
                     double precoAluguel = scanner.nextDouble();
                     scanner.nextLine();
-                    this.imoveis.add(new Imovel("imovel", nome, precoCompra, precoAluguel));
+                    this.imoveis.add(new Imovel(nome, precoCompra, precoAluguel));
                     System.out.println("Imóvel criado com sucesso!");
                     break;
                 }
@@ -198,7 +213,7 @@ public class Menu {
             System.out.println("1. Definir saldo inicial (Atual: R$ " + this.saldoInicial + ")");
             System.out.println("2. Definir salário por volta (Atual: R$ " + this.salario + ")");
             System.out.println("3. Definir nº máximo de rodadas (Atual: " + this.numeroRodadas + ")");
-            System.out.println("4. Voltar ao Menu Principal");
+            System.out.println("4. Voltar ao Jogo.Menu Principal");
             System.out.print("\n>> Escolha uma opção: ");
 
             int opcao = this.scanner.nextInt();
@@ -286,5 +301,64 @@ public class Menu {
 
         System.out.println("Tudo pronto! iniciando jogo...");
         return true;
+    }
+
+    public void desistir(Jogador jogadorAtual) {
+        this.jogadores.remove(jogadorAtual);
+        // TODO REMOVER A POSSE DOS IMOVEIS DO JOGADOR Q SAIU
+        System.out.println("Você desistiu do jogo, até mais!");
+    }
+
+    public void jogar() {
+        tabuleiro.montarTabuleiro(this.imoveis);
+
+        this.jogadores.forEach(jogador -> {
+            jogador.atual = this.tabuleiro.getInicio();
+            jogador.saldo = this.saldoInicial;
+        });
+
+        while (this.rodadaAtual <= this.numeroRodadas) {
+            this.rodadaAtual++;
+
+            this.jogadores.forEach(jogadorAtual -> {
+                System.out.println("=========================================");
+                System.out.println("=== RODADA " + this.rodadaAtual + " / " + this.numeroRodadas + " - VEZ DE: " + jogadorAtual.nome + "       ===");
+                System.out.println("=========================================");
+                System.out.println("Posição Atual: " + jogadorAtual.atual.getNome());
+                System.out.println("Saldo: R$ " + jogadorAtual.saldo);
+                System.out.println("\n--- O que você deseja fazer? ---");
+                System.out.println("1. Lançar Dados e Mover");
+                System.out.println("2. Ver Meu Status Completo (Saldo e Propriedades)");
+                System.out.println("3. Desistir do Jogo");
+                System.out.print("\n>> Escolha uma opção: ");
+
+                int opcao = this.scanner.nextInt();
+                scanner.nextLine();
+                while (opcao < 1 || opcao > 3) {
+                    System.out.println("Opção inválida, digite uma opção entre 1-3");
+                    opcao = this.scanner.nextInt();
+                    scanner.nextLine();
+                }
+
+                switch (opcao) {
+                    case 1: {
+                        int dado1 = random.nextInt(6) + 1;
+                        int dado2 = random.nextInt(6) + 1;
+
+                        for (int i = 0; i < (dado1 + dado2); i++) {
+                            jogadorAtual.atual = jogadorAtual.atual.getProximo();
+                            jogadorAtual.atual.verificarInicio(jogadorAtual);
+                        }
+                        jogadorAtual.atual.executarAcao(jogadorAtual);
+                        break;
+                    }
+                    case 3: {
+                        desistir(jogadorAtual);
+                        break;
+                    }
+                }
+
+            });
+        }
     }
 }

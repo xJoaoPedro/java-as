@@ -1,1 +1,2 @@
-quando encerrar o ciclo, deve voltar para o menu correto. (while trues)
+1. LIMITAR A CRIAÇÂO E REMOCAO DE JOGADORES E IMOVEIS
+2. FAZER AS AÇOES DAS CASAS

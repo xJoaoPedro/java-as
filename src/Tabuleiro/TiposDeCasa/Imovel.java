@@ -1,22 +1,21 @@
 package Tabuleiro.TiposDeCasa;
 
+import Jogo.Jogador;
 import Tabuleiro.Casa;
 
 public class Imovel extends Casa {
-    String nome;
     String nomeJogador = null;
     double precoCompra;
     double precoAluguel;
 
-    public Imovel(String tipo, String nome, double precoCompra, double precoAluguel) {
-        this.tipo = tipo;
-        this.nome = nome;
+    public Imovel(String nome, double precoCompra, double precoAluguel) {
+        super("imovel", nome, false);
         this.precoCompra = precoCompra;
         this.precoAluguel = precoAluguel;
     }
 
     @Override
-    public void executarAcao() {
+    public void executarAcao(Jogador jogador) {
         // Propriedade que pode ser comprada por um jogador. Se um jogador parar em um imóvel que já possui um dono,
         // ele deve pagar o aluguel correspondente.
 
@@ -28,9 +27,5 @@ public class Imovel extends Casa {
 
     public double getPrecoCompra() {
         return precoCompra;
-    }
-
-    public String getNome() {
-        return nome;
     }
 }

@@ -1,3 +1,5 @@
+package Jogo;
+
 import Tabuleiro.Casa;
 
 
@@ -9,5 +11,4 @@ public class Jogador {
     public Jogador(String nome) {
         this.nome = nome;
     }
-
 }

@@ -1,17 +1,17 @@
 package Tabuleiro.TiposDeCasa;
 
+import Jogo.Jogador;
 import Tabuleiro.Casa;
 
 public class SorteReves extends Casa {
-// objeto baralho
+    // TODO objeto baralho
 
-
-    public SorteReves(String tipo) {
-        this.tipo = tipo;
+    public SorteReves() {
+        super("sortereves", "Sorte / Revés", false);
     }
 
     @Override
-    public void executarAcao() {
+    public void executarAcao(Jogador jogadorAtual) {
 //        Implementar uma classe Baralho que gerencia uma Pilha (Stack) de objetos Carta.Criar um conjunto de, no
 //        mínimo, 16 cartas com eventos variados (ex:ganhe / perca dinheiro, avance para o início, pague uma taxa
 //        a todos, vá para a prisão, etc.).

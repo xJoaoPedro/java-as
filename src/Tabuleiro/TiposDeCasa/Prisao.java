@@ -1,15 +1,16 @@
 package Tabuleiro.TiposDeCasa;
 
+import Jogo.Jogador;
 import Tabuleiro.Casa;
 
 public class Prisao extends Casa {
 
-    public Prisao(String tipo) {
-        this.tipo = tipo;
+    public Prisao() {
+        super("prisao", "Prisão", false);
     }
 
     @Override
-    public void executarAcao() {
+    public void executarAcao(Jogador jogadorAtual) {
 //        Um jogador enviado para a casa "Prisão" permanece lá por no máximo 3 rodadas, com sua jogada alterada.Em cada
 //        uma dessas rodadas, o jogador deve tentar sair seguindo a regra:
 //        Sucesso:

@@ -3,7 +3,10 @@ package Tabuleiro.TiposDeCasa;
 import Jogo.Jogador;
 import Tabuleiro.Casa;
 
+import java.util.Scanner;
+
 public class Restituicao extends Casa {
+    Scanner scanner = new Scanner(System.in);
 
     public Restituicao() {
         super("restituicao", "Restituição", false);
@@ -11,6 +14,12 @@ public class Restituicao extends Casa {
 
     @Override
     public void executarAcao(Jogador jogadorAtual) {
-        // Ao parar nesta casa, o jogador recebe do "banco" uma restituição equivalente a 10% do valor do seu salário.
+        System.out.println("Você parou em uma casa de Restituição, e irá receber 10% do seu salário!");
+
+        jogadorAtual.setSaldo(jogadorAtual.getSaldo() + (jogadorAtual.getSalario() * 0.1));
+
+        System.out.println("Seu saldo atual: R$ " + jogadorAtual.getSaldo());
+        System.out.println("Pressione enter para continuar...");
+        scanner.nextLine();
     }
 }

@@ -26,4 +26,8 @@ public class Casa {
     public Casa getProximo() {
         return proximo;
     }
+
+    public String getTipo() {
+        return tipo;
+    }
 }

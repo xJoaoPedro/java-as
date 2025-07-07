@@ -4,6 +4,7 @@ import Tabuleiro.Tabuleiro;
 import Tabuleiro.TiposDeCasa.Imovel;
 
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -315,49 +316,86 @@ public class Menu {
         this.jogadores.forEach(jogador -> {
             jogador.atual = this.tabuleiro.getInicio();
             jogador.saldo = this.saldoInicial;
+            jogador.salario = this.salario;
         });
 
-        while (this.rodadaAtual <= this.numeroRodadas) {
+        while (this.rodadaAtual < this.numeroRodadas) {
             this.rodadaAtual++;
 
             this.jogadores.forEach(jogadorAtual -> {
-                System.out.println("=========================================");
-                System.out.println("=== RODADA " + this.rodadaAtual + " / " + this.numeroRodadas + " - VEZ DE: " + jogadorAtual.nome + "       ===");
-                System.out.println("=========================================");
-                System.out.println("Posição Atual: " + jogadorAtual.atual.getNome());
-                System.out.println("Saldo: R$ " + jogadorAtual.saldo);
-                System.out.println("\n--- O que você deseja fazer? ---");
-                System.out.println("1. Lançar Dados e Mover");
-                System.out.println("2. Ver Meu Status Completo (Saldo e Propriedades)");
-                System.out.println("3. Desistir do Jogo");
-                System.out.print("\n>> Escolha uma opção: ");
-
-                int opcao = this.scanner.nextInt();
-                scanner.nextLine();
-                while (opcao < 1 || opcao > 3) {
-                    System.out.println("Opção inválida, digite uma opção entre 1-3");
-                    opcao = this.scanner.nextInt();
-                    scanner.nextLine();
+                if (jogadorAtual.getRodadasNaPrisao() > 3) {
+//                     TODO VERIFICAR SE È A 3 RODADA E TIRAR DA PRISAO E FAZER A PARTE DO SORTE/REVES
                 }
+                if (Objects.equals(jogadorAtual.atual.getTipo(), "prisao")) {
+                    jogadorAtual.setRodadasNaPrisao(jogadorAtual.getRodadasNaPrisao() + 1);
 
-                switch (opcao) {
-                    case 1: {
-                        int dado1 = random.nextInt(6) + 1;
-                        int dado2 = random.nextInt(6) + 1;
+                    System.out.println("=========================================");
+                    System.out.println("=== RODADA " + this.rodadaAtual + " / " + this.numeroRodadas + " - VEZ DE: " + jogadorAtual.getNome() + " (NA PRISÃO) ===");
+                    System.out.println("=========================================");
+                    System.out.println("Você está na prisão! (" + jogadorAtual.getRodadasNaPrisao() + "ª de 3 tentativas para sair)");
+                    System.out.println("\n>> Pressione enter para rolar os dados e tentar sair");
+                    scanner.nextLine();
+
+                    int dado1 = random.nextInt(6) + 1;
+                    int dado2 = random.nextInt(6) + 1;
+
+
+                    if (dado1 == dado2) {
+                        jogadorAtual.setRodadasNaPrisao(0);
+                        System.out.println(dado1 + " e " + dado2 + "! Você está livre! Avance " + (dado1 + dado2) + " casas!");
 
                         for (int i = 0; i < (dado1 + dado2); i++) {
                             jogadorAtual.atual = jogadorAtual.atual.getProximo();
                             jogadorAtual.atual.verificarInicio(jogadorAtual);
                         }
                         jogadorAtual.atual.executarAcao(jogadorAtual);
-                        break;
+                    } else {
+                        System.out.println ("Você tirou " + dado1 + " e " + dado2 + ". Não são duplos.");
+                        System.out.println("Você permanece na prisão.");
+                        System.out.println("Pressione Enter para finalizar o turno...");
+                        scanner.nextLine();
                     }
-                    case 3: {
-                        desistir(jogadorAtual);
-                        break;
+                } else {
+                    System.out.println("=========================================");
+                    System.out.println("=== RODADA " + this.rodadaAtual + " / " + this.numeroRodadas + " - VEZ DE: " + jogadorAtual.nome + "       ===");
+                    System.out.println("=========================================");
+                    System.out.println("Posição Atual: " + jogadorAtual.atual.getNome());
+                    System.out.println("Saldo: R$ " + jogadorAtual.saldo);
+                    System.out.println("\n--- O que você deseja fazer? ---");
+                    System.out.println("1. Lançar Dados e Mover");
+                    System.out.println("2. Ver Meu Status Completo (Saldo e Propriedades)");
+                    System.out.println("3. Desistir do Jogo");
+                    System.out.print("\n>> Escolha uma opção: ");
+
+                    int opcao = this.scanner.nextInt();
+                    scanner.nextLine();
+                    while (opcao < 1 || opcao > 3) {
+                        System.out.println("Opção inválida, digite uma opção entre 1-3");
+                        opcao = this.scanner.nextInt();
+                        scanner.nextLine();
+                    }
+
+                    switch (opcao) {
+                        case 1: {
+                            int dado1 = random.nextInt(6) + 1;
+                            int dado2 = random.nextInt(6) + 1;
+
+                            System.out.println("Você tirou " + dado1 + " e " + dado2 + ". Total: " + (dado1 + dado2) + ".");
+                            System.out.println("Avançando " + (dado1 + dado2) + " casas...");
+
+                            for (int i = 0; i < (dado1 + dado2); i++) {
+                                jogadorAtual.atual = jogadorAtual.atual.getProximo();
+                                jogadorAtual.atual.verificarInicio(jogadorAtual);
+                            }
+                            jogadorAtual.atual.executarAcao(jogadorAtual);
+                            break;
+                        }
+                        case 3: {
+                            desistir(jogadorAtual);
+                            break;
+                        }
                     }
                 }
-
             });
         }
     }

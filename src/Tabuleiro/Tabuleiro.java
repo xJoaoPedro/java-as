@@ -15,7 +15,6 @@ public class Tabuleiro {
     public Tabuleiro() {
         this.inicio = new Inicio();
 
-        // dois imposto, dois restituicao, dois prisao, seis sortereves
         this.casasParaMontar = new ArrayList<>(Arrays.asList(
                 new Imposto(), new Imposto(),
                 new Restituicao(), new Restituicao(),

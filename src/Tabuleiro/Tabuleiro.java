@@ -1,5 +1,6 @@
 package Tabuleiro;
 
+import Jogo.Baralho;
 import Tabuleiro.TiposDeCasa.*;
 
 import java.util.ArrayList;
@@ -11,6 +12,7 @@ public class Tabuleiro {
     Casa inicio;
     Casa fim;
     List<Casa> casasParaMontar;
+    Baralho baralho = new Baralho();
 
     public Tabuleiro() {
         this.inicio = new Inicio();
@@ -19,9 +21,9 @@ public class Tabuleiro {
                 new Imposto(), new Imposto(),
                 new Restituicao(), new Restituicao(),
                 new Prisao(), new Prisao(),
-                new SorteReves(), new SorteReves(),
-                new SorteReves(), new SorteReves(),
-                new SorteReves(), new SorteReves()
+                new SorteReves(baralho), new SorteReves(baralho),
+                new SorteReves(baralho), new SorteReves(baralho),
+                new SorteReves(baralho), new SorteReves(baralho)
         ));
 
         this.fim = null;
@@ -34,16 +36,22 @@ public class Tabuleiro {
 
         inicio.proximo = this.casasParaMontar.removeLast();
         this.fim = inicio.proximo;
+        this.fim.anterior = inicio;
 
         while (!this.casasParaMontar.isEmpty()) {
             this.fim.proximo = this.casasParaMontar.removeLast();
             this.fim = this.fim.proximo;
         }
 
+        inicio.anterior = this.fim;
         this.fim.proximo = this.inicio;
     }
 
     public Casa getInicio() {
         return inicio;
+    }
+
+    public Baralho getBaralho() {
+        return baralho;
     }
 }

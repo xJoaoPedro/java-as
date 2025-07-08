@@ -84,4 +84,8 @@ public class Imovel extends Casa {
     public double getPrecoCompra() {
         return precoCompra;
     }
+
+    public void removerProprietario() {
+        this.proprietario = null;
+    }
 }

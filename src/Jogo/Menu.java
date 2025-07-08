@@ -41,6 +41,8 @@ public class Menu {
     }
 
     public void iniciar() {
+        this.tabuleiro.getBaralho().embaralhar();
+
         while (true) {
             System.out.println("\n");
             System.out.println("=========================================");
@@ -97,12 +99,12 @@ public class Menu {
 
         while (continuar) {
             System.out.println("\n\n");
-            System.out.println("--- Jogo.Menu de Jogadores ---");
+            System.out.println("--- Menu de Jogadores ---");
             System.out.println("(Atualmente: " + this.jogadores.size() + "/6 jogadores cadastrados)");
-            System.out.println("1. Cadastrar Novo Jogo.Jogador");
+            System.out.println("1. Cadastrar Novo jogador");
             System.out.println("2. Listar Jogadores Cadastrados");
-            System.out.println("3. Remover Jogo.Jogador");
-            System.out.println("4. Voltar ao Jogo.Menu Principal");
+            System.out.println("3. Remover jogador");
+            System.out.println("4. Voltar ao menu Principal");
             System.out.print("\n>> Escolha uma opção: ");
 
             int opcao = scanner.nextInt();
@@ -116,10 +118,14 @@ public class Menu {
 
             switch (opcao) {
                 case 1: {
-                    System.out.print("\n>> Digite o nome do novo jogador: ");
-                    String nome = scanner.next();
-                    this.jogadores.add(new Jogador(nome));
-                    System.out.println("Jogo.Jogador criado com sucesso!");
+                    if (this.jogadores.size() < 6) {
+                        System.out.print("\n>> Digite o nome do novo jogador: ");
+                        String nome = scanner.next();
+                        this.jogadores.add(new Jogador(nome));
+                        System.out.println("Jogador criado com sucesso!");
+                    } else {
+                        System.out.println("Máximo de jogadores atingido, tente remover outro jogador primeiro.");
+                    }
                     break;
                 }
                 case 2: {
@@ -170,15 +176,19 @@ public class Menu {
 
             switch (opcao) {
                 case 1: {
-                    System.out.print("\n>> Digite o nome do novo imóvel: ");
-                    String nome = scanner.nextLine();
-                    System.out.print("\n>> Digite o preço de compra de " + nome + ": ");
-                    double precoCompra = scanner.nextDouble();
-                    System.out.print("\n>> Digite o preço de aluguel de " + nome + ": ");
-                    double precoAluguel = scanner.nextDouble();
-                    scanner.nextLine();
-                    this.imoveis.add(new Imovel(nome, precoCompra, precoAluguel));
-                    System.out.println("Imóvel criado com sucesso!");
+                    if (this.imoveis.size() < 30) {
+                        System.out.print("\n>> Digite o nome do novo imóvel: ");
+                        String nome = scanner.nextLine();
+                        System.out.print("\n>> Digite o preço de compra de " + nome + ": ");
+                        double precoCompra = scanner.nextDouble();
+                        System.out.print("\n>> Digite o preço de aluguel de " + nome + ": ");
+                        double precoAluguel = scanner.nextDouble();
+                        scanner.nextLine();
+                        this.imoveis.add(new Imovel(nome, precoCompra, precoAluguel));
+                        System.out.println("Imóvel criado com sucesso!");
+                    } else {
+                        System.out.println("Máximo de imóveis atingido, tente remover outro imóvel primeiro.");
+                    }
                     break;
                 }
                 case 2: {
@@ -306,8 +316,8 @@ public class Menu {
 
     public void desistir(Jogador jogadorAtual) {
         this.jogadores.remove(jogadorAtual);
-        // TODO REMOVER A POSSE DOS IMOVEIS DO JOGADOR Q SAIU
-        System.out.println("Você desistiu do jogo, até mais!");
+        jogadorAtual.imoveis.forEach(Imovel::removerProprietario);
+        System.out.println("Jogador " + jogadorAtual.getNome() + " desistiu do jogo, até mais!");
     }
 
     public void jogar() {
@@ -322,11 +332,32 @@ public class Menu {
         while (this.rodadaAtual < this.numeroRodadas) {
             this.rodadaAtual++;
 
+            // TODO VERIFICAR QUANTOS JOGADORES ESTAO JOGANDO
+
             this.jogadores.forEach(jogadorAtual -> {
-                if (jogadorAtual.getRodadasNaPrisao() > 3) {
-//                     TODO VERIFICAR SE È A 3 RODADA E TIRAR DA PRISAO E FAZER A PARTE DO SORTE/REVES
-                }
-                if (Objects.equals(jogadorAtual.atual.getTipo(), "prisao")) {
+                if (jogadorAtual.getRodadasNaPrisao() > 2) {
+                    jogadorAtual.setRodadasNaPrisao(0);
+                    System.out.println("Você está livre da prisão!");
+                    System.out.println("=========================================");
+                    System.out.println("=== RODADA " + this.rodadaAtual + " / " + this.numeroRodadas + " - VEZ DE: " + jogadorAtual.nome + "       ===");
+                    System.out.println("=========================================");
+                    System.out.println("Posição Atual: " + jogadorAtual.atual.getNome());
+                    System.out.println("Saldo: R$ " + jogadorAtual.saldo);
+                    System.out.print("\n>> Pressione enter para rolar os dados: ");
+                    scanner.nextLine();
+
+                    int dado1 = random.nextInt(6) + 1;
+                    int dado2 = random.nextInt(6) + 1;
+
+                    System.out.println("Você tirou " + dado1 + " e " + dado2 + ". Total: " + (dado1 + dado2) + ".");
+                    System.out.println("Avançando " + (dado1 + dado2) + " casas...");
+
+                    for (int i = 0; i < (dado1 + dado2); i++) {
+                        jogadorAtual.atual = jogadorAtual.atual.getProximo();
+                        jogadorAtual.atual.verificarInicio(jogadorAtual);
+                    }
+                    jogadorAtual.atual.executarAcao(jogadorAtual);
+                } else if (Objects.equals(jogadorAtual.atual.getTipo(), "prisao")) {
                     jogadorAtual.setRodadasNaPrisao(jogadorAtual.getRodadasNaPrisao() + 1);
 
                     System.out.println("=========================================");
@@ -356,47 +387,76 @@ public class Menu {
                         scanner.nextLine();
                     }
                 } else {
-                    System.out.println("=========================================");
-                    System.out.println("=== RODADA " + this.rodadaAtual + " / " + this.numeroRodadas + " - VEZ DE: " + jogadorAtual.nome + "       ===");
-                    System.out.println("=========================================");
-                    System.out.println("Posição Atual: " + jogadorAtual.atual.getNome());
-                    System.out.println("Saldo: R$ " + jogadorAtual.saldo);
-                    System.out.println("\n--- O que você deseja fazer? ---");
-                    System.out.println("1. Lançar Dados e Mover");
-                    System.out.println("2. Ver Meu Status Completo (Saldo e Propriedades)");
-                    System.out.println("3. Desistir do Jogo");
-                    System.out.print("\n>> Escolha uma opção: ");
-
-                    int opcao = this.scanner.nextInt();
-                    scanner.nextLine();
-                    while (opcao < 1 || opcao > 3) {
-                        System.out.println("Opção inválida, digite uma opção entre 1-3");
-                        opcao = this.scanner.nextInt();
-                        scanner.nextLine();
-                    }
-
-                    switch (opcao) {
-                        case 1: {
-                            int dado1 = random.nextInt(6) + 1;
-                            int dado2 = random.nextInt(6) + 1;
-
-                            System.out.println("Você tirou " + dado1 + " e " + dado2 + ". Total: " + (dado1 + dado2) + ".");
-                            System.out.println("Avançando " + (dado1 + dado2) + " casas...");
-
-                            for (int i = 0; i < (dado1 + dado2); i++) {
-                                jogadorAtual.atual = jogadorAtual.atual.getProximo();
-                                jogadorAtual.atual.verificarInicio(jogadorAtual);
-                            }
-                            jogadorAtual.atual.executarAcao(jogadorAtual);
-                            break;
-                        }
-                        case 3: {
-                            desistir(jogadorAtual);
-                            break;
-                        }
-                    }
+                    showMenu(jogadorAtual);
                 }
             });
+
+            for (int i = 0; i < this.jogadores.size(); i++) {
+                Jogador jogador = this.jogadores.get(i);
+                if (jogador.desistiu) {
+                    desistir(jogador);
+                }
+            }
+        }
+
+        // TODO LOGICA DE POS JOGO
+    }
+
+    public void showMenu(Jogador jogadorAtual) {
+        System.out.println("=========================================");
+        System.out.println("=== RODADA " + this.rodadaAtual + " / " + this.numeroRodadas + " - VEZ DE: " + jogadorAtual.nome + "       ===");
+        System.out.println("=========================================");
+        System.out.println("Posição Atual: " + jogadorAtual.atual.getNome());
+        System.out.println("Saldo: R$ " + jogadorAtual.saldo);
+        System.out.println("\n--- O que você deseja fazer? ---");
+        System.out.println("1. Lançar Dados e Mover");
+        System.out.println("2. Ver Meu Status Completo (Saldo e Propriedades)");
+        System.out.println("3. Desistir do Jogo");
+        System.out.print("\n>> Escolha uma opção: ");
+
+        int opcao = this.scanner.nextInt();
+        scanner.nextLine();
+        while (opcao < 1 || opcao > 3) {
+            System.out.println("Opção inválida, digite uma opção entre 1-3");
+            opcao = this.scanner.nextInt();
+            scanner.nextLine();
+        }
+
+        switch (opcao) {
+            case 1: {
+                int dado1 = random.nextInt(6) + 1;
+                int dado2 = random.nextInt(6) + 1;
+
+                System.out.println("Você tirou " + dado1 + " e " + dado2 + ". Total: " + (dado1 + dado2) + ".");
+                System.out.println("Avançando " + (dado1 + dado2) + " casas...");
+
+                for (int i = 0; i < (dado1 + dado2); i++) {
+                    jogadorAtual.atual = jogadorAtual.atual.getProximo();
+                    jogadorAtual.atual.verificarInicio(jogadorAtual);
+                }
+                jogadorAtual.atual.executarAcao(jogadorAtual);
+                break;
+            }
+            case 2: {
+                System.out.println("Status completo:");
+                System.out.println("Salário: " + jogadorAtual.getSalario());
+                System.out.println("Saldo: " + jogadorAtual.getSaldo());
+                System.out.println("Propriedades:");
+                if (!jogadorAtual.imoveis.isEmpty()) {
+                    jogadorAtual.imoveis.forEach(imovel -> {
+                        System.out.println("Nome: " + imovel.getNome() + " | Aluguel: " + imovel.getPrecoAluguel() + " | Compra: " + imovel.getPrecoCompra());
+                    });
+                } else {
+                    System.out.println("Sem imóveis...");
+                }
+
+                showMenu(jogadorAtual);
+                break;
+            }
+            case 3: {
+                jogadorAtual.desistiu = true;
+                break;
+            }
         }
     }
 }
